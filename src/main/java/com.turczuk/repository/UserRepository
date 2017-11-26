@@ -1,0 +1,17 @@
+package com.turczuk.repository;
+
+import com.turczuk.model.User;
+import org.springframework.data.cassandra.repository.CassandraRepository;
+import org.springframework.data.cassandra.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface UserRepository extends CassandraRepository<User> {
+    @Query("SELECT * FROM user WHERE magic_number=?0 ALLOW FILTERING")
+    List<User> findByMagicNumber(Long magicNumber);
+
+    @Query("INSERT INTO user(id, email, title, content, magic_number) VALUES(now(),?0,?1,?2, ?3) USING TTL 300")
+    User insert(String email, String title, String content, Long magicNumber);
+}
