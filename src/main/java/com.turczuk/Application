@@ -1,0 +1,23 @@
+package com.turczuk;
+
+import com.turczuk.config.EmailConfig;
+import com.turczuk.service.MailService;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
+
+
+@SpringBootApplication
+@EnableCassandraRepositories
+public class Application {
+
+    public static void main(String[] args) throws Exception {
+
+        SpringApplication.run(Application.class, args);
+        
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext(EmailConfig.class);
+        MailService mailService = (MailService) context.getBean("mailService");
+    }
+}
