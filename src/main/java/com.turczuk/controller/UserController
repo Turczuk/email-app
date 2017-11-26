@@ -1,0 +1,53 @@
+package com.turczuk.controller;
+
+import java.util.List;
+
+import com.turczuk.service.MailServiceImpl;
+import com.turczuk.model.User;
+import com.turczuk.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.cassandra.core.CassandraTemplate;
+import org.springframework.web.bind.annotation.*;
+
+
+@RestController
+public class UserController {
+
+    @Autowired
+    private CassandraTemplate cassandraTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private MailServiceImpl mailService;
+
+
+    public UserController() {
+        System.out.println("UserController()");
+    }
+
+    @RequestMapping(value = "/api/message", method = RequestMethod.POST)
+    void message(@RequestBody User user) {
+        String email = user.getEmail();
+        String title = user.getTitle();
+        String content = user.getContent();
+        Long magicNumber = user.getMagicNumber();
+        userRepository.insert(email, title, content, magicNumber);
+    }
+
+    @RequestMapping(value = "/api/get", method = RequestMethod.GET)
+    List<User> get() {
+        return cassandraTemplate.selectAll(User.class);
+    }
+
+    @RequestMapping(value = "api/send", method = RequestMethod.POST)
+    void delete(@RequestBody User user) {
+        Long magicNumber = user.getMagicNumber();
+
+        for (User userEmail : userRepository.findByMagicNumber(magicNumber)) {
+            mailService.sendEmail(userEmail);
+        }
+        cassandraTemplate.delete(userRepository.findByMagicNumber(magicNumber));
+    }
+}
