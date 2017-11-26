@@ -1,0 +1,93 @@
+package com.turczuk.model;
+
+import org.springframework.data.cassandra.mapping.Column;
+import org.springframework.data.cassandra.mapping.PrimaryKey;
+import org.springframework.data.cassandra.mapping.Table;
+
+import java.util.UUID;
+
+/*
+    To create user Table in cassandra use commands below in Cassandra CQL:
+    create keyspace "turczuk" with replication = {'class':'SimpleStrategy','replication_factor':'1'};
+    use turczuk;
+    CREATE TABLE user(id uuid PRIMARY KEY, email text, title text, content text, magic_number int);
+ */
+@Table("user")
+public class User {
+    @PrimaryKey("id")
+    private UUID id;
+
+    @Column("email")
+    private String email;
+
+    @Column("title")
+    private String title;
+
+    @Column("content")
+    private String content;
+
+    @Column("magic_number")
+    private Long magicNumber;
+
+    public User() {
+        super();
+    }
+
+    public User(String email, String title, String content, Long magicNumber) {
+        this.email = email;
+        this.title = title;
+        this.content = content;
+        this.magicNumber = magicNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", magicNumber=" + magicNumber +
+                '}';
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Long getMagicNumber() {
+        return magicNumber;
+    }
+
+    public void setMagicNumber(Long magicNumber) {
+        this.magicNumber = magicNumber;
+    }
+}
