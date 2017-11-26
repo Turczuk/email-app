@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private CassandraTemplate cassandraTemplate;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
